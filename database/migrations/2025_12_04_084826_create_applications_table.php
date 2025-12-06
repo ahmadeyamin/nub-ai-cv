@@ -13,7 +13,9 @@ return new class extends Migration {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('job_post_id')->constrained('job_posts')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->string('resume_path');
             $table->text('cover_note')->nullable();
             $table->integer('ai_score')->nullable();

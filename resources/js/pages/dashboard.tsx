@@ -17,10 +17,8 @@ import { create, show } from '@/routes/jobs';
 
 interface Application {
     id: number;
-    user: {
-        name: string;
-        email: string;
-    };
+    name: string;
+    email: string;
     resume_path: string;
     ai_score: number;
     created_at: string;
@@ -83,8 +81,8 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                 <TableRow key={app.id}>
                                                                     <TableCell>
                                                                         <div>
-                                                                            <div className="font-medium">{app.user.name}</div>
-                                                                            <div className="text-sm text-gray-500">{app.user.email}</div>
+                                                                            <div className="font-medium">{app.name}</div>
+                                                                            <div className="text-sm text-gray-500">{app.email}</div>
                                                                         </div>
                                                                     </TableCell>
                                                                     <TableCell>

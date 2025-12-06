@@ -16,28 +16,26 @@ import { Link } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
+import { usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
+
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'My Jobs',
         href: dashboard(),
         icon: LayoutGrid,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+
+    if (!auth.user) {
+        return null;
+    }
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

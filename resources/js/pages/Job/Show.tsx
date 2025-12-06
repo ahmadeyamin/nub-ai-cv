@@ -91,7 +91,7 @@ export default function ShowJob({ job }: ShowJobProps) {
 						</div>
 
 						<div className="lg:col-span-1">
-							{!isOwner && auth.user ? (
+							{!isOwner ? (
 								<Card>
 									<CardHeader>
 										<CardTitle>Apply for this Position</CardTitle>
@@ -129,20 +129,6 @@ export default function ShowJob({ job }: ShowJobProps) {
 												Submit Application
 											</Button>
 										</form>
-									</CardContent>
-								</Card>
-							) : !auth.user ? (
-								<Card>
-									<CardContent className="pt-6">
-										<div className="text-center">
-											<h3 className="text-lg font-semibold mb-2">Want to apply?</h3>
-											<p className="text-gray-600 dark:text-gray-400 mb-4">
-												Please log in or register to submit your application.
-											</p>
-											<Button className="w-full" asChild>
-												<a href={login().url}>Log in to Apply</a>
-											</Button>
-										</div>
 									</CardContent>
 								</Card>
 							) : (

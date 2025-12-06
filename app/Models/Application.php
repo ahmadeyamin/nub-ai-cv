@@ -12,6 +12,8 @@ class Application extends Model
     protected $fillable = [
         'job_post_id',
         'user_id',
+        'name',
+        'email',
         'resume_path',
         'cover_note',
         'ai_score',

@@ -34,12 +34,14 @@ class CVAnalysisService
 				name: 'analysis',
 				description: 'The analysis of the candidate resume',
 				properties: [
+					new StringSchema('name', 'The candidate\'s full name.'),
+					new StringSchema('email', 'The candidate\'s email address.'),
 					new NumberSchema('score', 'A score from 0 to 100 indicating how well the candidate matches the job.'),
 					new ArraySchema('strengths', 'A strength of the candidate.', new StringSchema('strength', 'A strength of the candidate.')),
 					new ArraySchema('weaknesses', 'A weakness of the candidate.', new StringSchema('weakness', 'A weakness of the candidate.')),
 					new StringSchema('summary', 'A brief summary of the candidate\'s suitability.'),
 				],
-				requiredFields: ['score', 'strengths', 'weaknesses', 'summary']
+				requiredFields: ['name', 'email', 'score', 'strengths', 'weaknesses', 'summary']
 			))
 			->asStructured();
 

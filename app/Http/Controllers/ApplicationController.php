@@ -24,7 +24,9 @@ class ApplicationController extends Controller
         $analysis = $analyzer->analyze($path, $job->description);
 
         $job->applications()->create([
-            'user_id' => $request->user()->id,
+            'user_id' => $request->user()?->id,
+            'name' => $analysis['name'] ?? null,
+            'email' => $analysis['email'] ?? null,
             'resume_path' => $path,
             'cover_note' => $validated['cover_note'],
             'ai_score' => $analysis['score'],
