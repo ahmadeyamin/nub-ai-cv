@@ -4,16 +4,22 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', [\App\Http\Controllers\JobController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        $jobs = \App\Models\Job::where('user_id', auth()->id())
+            ->with(['applications.user'])
+            ->latest()
+            ->get();
+
+        return Inertia::render('Dashboard', [
+            'jobs' => $jobs
+        ]);
     })->name('dashboard');
+
+    Route::resource('jobs', \App\Http\Controllers\JobController::class)->only(['create', 'store', 'show']);
+    Route::post('jobs/{job}/applications', [\App\Http\Controllers\ApplicationController::class, 'store'])->name('applications.store');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

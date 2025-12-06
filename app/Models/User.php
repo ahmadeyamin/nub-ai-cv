@@ -49,4 +49,14 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }
