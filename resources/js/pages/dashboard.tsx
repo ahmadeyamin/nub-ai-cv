@@ -11,9 +11,17 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { FileText, Star } from 'lucide-react';
+import { FileText, Star, Eye } from 'lucide-react'; // Added Eye icon
 import { dashboard } from '@/routes';
 import { create, show } from '@/routes/jobs';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Application {
     id: number;
@@ -21,6 +29,11 @@ interface Application {
     email: string;
     resume_path: string;
     ai_score: number;
+    ai_analysis: {
+        summary: string;
+        strengths: string[];
+        weaknesses: string[];
+    };
     created_at: string;
 }
 
@@ -36,7 +49,7 @@ interface DashboardProps {
 
 export default function Dashboard({ jobs }: DashboardProps) {
     return (
-        <AppLayout breadcrumbs={[{ title: 'Dashboard', href: dashboard() }]}>
+        <AppLayout breadcrumbs={[{ title: 'Dashboard', href: dashboard().url }]}>
             <Head title="Dashboard" />
 
             <div className="py-12">
@@ -68,6 +81,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                 <Table>
                                                     <TableHeader>
                                                         <TableRow>
+                                                            <TableHead>ID</TableHead>
                                                             <TableHead>Candidate</TableHead>
                                                             <TableHead>Applied Date</TableHead>
                                                             <TableHead>AI Score</TableHead>
@@ -76,9 +90,9 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                     </TableHeader>
                                                     <TableBody>
                                                         {job.applications
-                                                            .sort((a, b) => (b.ai_score || 0) - (a.ai_score || 0))
                                                             .map((app) => (
                                                                 <TableRow key={app.id}>
+                                                                    <TableCell>{app.id}</TableCell>
                                                                     <TableCell>
                                                                         <div>
                                                                             <div className="font-medium">{app.name}</div>
@@ -86,7 +100,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                         </div>
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                        {new Date(app.created_at).toLocaleDateString()}
+                                                                        {new Date(app.created_at).toLocaleString()}
                                                                     </TableCell>
                                                                     <TableCell>
                                                                         {app.ai_score !== null ? (
@@ -103,16 +117,60 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                         )}
                                                                     </TableCell>
                                                                     <TableCell className="text-right">
-                                                                        <a
-                                                                            href={`/storage/${app.resume_path}`}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                        >
-                                                                            <Button variant="ghost" size="sm">
-                                                                                <FileText className="h-4 w-4 mr-2" />
-                                                                                Resume
-                                                                            </Button>
-                                                                        </a>
+                                                                        <div className="flex justify-end gap-2">
+                                                                            {app.ai_analysis && (
+                                                                                <Dialog>
+                                                                                    <DialogTrigger asChild>
+                                                                                        <Button variant="outline" size="sm">
+                                                                                            <Eye className="h-4 w-4 mr-2" />
+                                                                                            Analysis
+                                                                                        </Button>
+                                                                                    </DialogTrigger>
+                                                                                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                                                                                        <DialogHeader>
+                                                                                            <DialogTitle>AI Analysis for {app.name}</DialogTitle>
+                                                                                            <DialogDescription>
+                                                                                                Candidate Score: {app.ai_score}/100
+                                                                                            </DialogDescription>
+                                                                                        </DialogHeader>
+                                                                                        <div className="space-y-4">
+                                                                                            <div>
+                                                                                                <h4 className="font-semibold mb-2">Summary</h4>
+                                                                                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                                                                                    {app.ai_analysis.summary}
+                                                                                                </p>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <h4 className="font-semibold mb-2 text-green-600">Strengths</h4>
+                                                                                                <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300">
+                                                                                                    {app.ai_analysis.strengths.map((strength, index) => (
+                                                                                                        <li key={index}>{strength}</li>
+                                                                                                    ))}
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <h4 className="font-semibold mb-2 text-red-600">Weaknesses</h4>
+                                                                                                <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300">
+                                                                                                    {app.ai_analysis.weaknesses.map((weakness, index) => (
+                                                                                                        <li key={index}>{weakness}</li>
+                                                                                                    ))}
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </DialogContent>
+                                                                                </Dialog>
+                                                                            )}
+                                                                            <a
+                                                                                href={`/storage/${app.resume_path}`}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                            >
+                                                                                <Button variant="ghost" size="sm">
+                                                                                    <FileText className="h-4 w-4 mr-2" />
+                                                                                    Resume
+                                                                                </Button>
+                                                                            </a>
+                                                                        </div>
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))}

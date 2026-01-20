@@ -2,12 +2,29 @@ import { SVGAttributes } from 'react';
 
 export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
     return (
-        <svg {...props} viewBox="0 0 40 42" xmlns="http://www.w3.org/2000/svg">
-            <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M17.2 5.63325L8.6 0.855469L0 5.63325V32.1434L16.2 41.1434L32.4 32.1434V23.699L40 19.4767V9.85547L31.4 5.07769L22.8 9.85547V18.2999L17.2 21.411V5.63325ZM38 18.2999L32.4 21.411V15.2545L38 12.1434V18.2999ZM36.9409 10.4439L31.4 13.5221L25.8591 10.4439L31.4 7.36561L36.9409 10.4439ZM24.8 18.2999V12.1434L30.4 15.2545V21.411L24.8 18.2999ZM23.8 20.0323L29.3409 23.1105L16.2 30.411L10.6591 27.3328L23.8 20.0323ZM7.6 27.9212L15.2 32.1434V38.2999L2 30.9666V7.92116L7.6 11.0323V27.9212ZM8.6 9.29991L3.05913 6.22165L8.6 3.14339L14.1409 6.22165L8.6 9.29991ZM30.4 24.8101L17.2 32.1434V38.2999L30.4 30.9666V24.8101ZM9.6 11.0323L15.2 7.92117V22.5221L9.6 25.6333V11.0323Z"
-            />
+        <svg {...props} width="256" height="256" viewBox="0 0 256 256" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <circle cx="128" cy="128" r="120" fill="#0F172A" />
+
+            <rect x="78" y="58" width="100" height="140" rx="10" fill="#FFFFFF" />
+            <rect x="92" y="82" width="72" height="8" rx="4" fill="#CBD5E1" />
+            <rect x="92" y="100" width="60" height="8" rx="4" fill="#CBD5E1" />
+            <rect x="92" y="118" width="68" height="8" rx="4" fill="#CBD5E1" />
+
+            <circle cx="86" cy="150" r="6" fill="#3B82F6" />
+            <circle cx="128" cy="164" r="6" fill="#3B82F6" />
+            <circle cx="170" cy="148" r="6" fill="#3B82F6" />
+
+            <line x1="86" y1="150" x2="128" y2="164" stroke="#3B82F6" stroke-width="3" />
+            <line x1="128" y1="164" x2="170" y2="148" stroke="#3B82F6" stroke-width="3" />
+
+            <circle cx="164" cy="78" r="18" fill="#22C55E" />
+            <path d="M156 78 L162 84 L172 72"
+                stroke="#FFFFFF" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round" />
+
         </svg>
+
     );
 }
