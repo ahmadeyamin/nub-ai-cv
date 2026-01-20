@@ -42,8 +42,8 @@ npm -v
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/ahmadeyamin/nub-ai-cv.git
+cd nub-ai-cv
 ```
 
 ---
@@ -71,7 +71,7 @@ npm install
 or
 
 ```bash
-yarn install
+bun install
 ```
 
 ---
@@ -97,7 +97,7 @@ php artisan key:generate
 Edit `.env`:
 
 ```env
-DB_CONNECTION=mysql
+DB_CONNECTION=mysql / postgresql / sqlite
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=your_database
