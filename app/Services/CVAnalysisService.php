@@ -20,13 +20,13 @@ class CVAnalysisService
 
 		$response = Prism::structured()
 			// Use the experimental Gemini 2.0 Pro model
-			->using(Provider::Gemini, 'gemini-2.5-flash')
+			->using(Provider::OpenRouter, 'gemini-2.5-flash')
 			->withSystemPrompt('You are an expert HR recruiter. Analyze the candidate resume against the job description.')
 			->withPrompt(
 				"Job Description:\n$jobDescription\n\nPlease analyze the attached resume.",
 				[
 					// Pass the file directly to Gemini
-					Document::fromPath($fullPath)
+					Document::fromLocalPath($fullPath)
 				]
 			)
 			->withClientOptions(['temperature' => 0])
