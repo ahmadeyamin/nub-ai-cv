@@ -1,5 +1,4 @@
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,7 +46,7 @@ export default function ShowJob({ job }: ShowJobProps) {
 	const isOwner = auth.user && auth.user.id === job.user_id;
 
 	return (
-		<AppLayout breadcrumbs={[{ title: 'Jobs', href: home().url }, { title: job.title, href: '#' }]}>
+		<>
 			<Head title={`${job.title} - AI Career Hub`} />
 
 			{/* Back to Jobs Link */}
@@ -290,6 +289,6 @@ export default function ShowJob({ job }: ShowJobProps) {
 					</div>
 				</div>
 			</div>
-		</AppLayout>
+		</>
 	);
 }

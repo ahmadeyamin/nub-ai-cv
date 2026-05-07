@@ -327,7 +327,7 @@ export default function Home({ jobs }: HomeProps) {
 							</Button>
 						</Link>
 						<Link href={create().url}>
-							<Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8">
+							<Button size="lg" variant="outline" className="border-white  hover:bg-white hover:text-blue-600 px-8">
 								Learn More
 							</Button>
 						</Link>
