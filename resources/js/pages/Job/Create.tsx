@@ -25,7 +25,8 @@ import {
 	Lightbulb,
 	ArrowRight,
 	CheckCircle,
-	AlertCircle
+	AlertCircle,
+	HelpCircle
 } from 'lucide-react';
 import { create, store } from '@/routes/jobs';
 
@@ -36,6 +37,7 @@ export default function CreateJob() {
 		location: '',
 		salary_range: '',
 		type: 'Full-time',
+		quiz_questions_count: 10,
 	});
 
 	const submit = (e: React.FormEvent) => {
@@ -227,6 +229,45 @@ export default function CreateJob() {
 										<p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
 											Optional but recommended - helps attract qualified candidates
 										</p>
+									</div>
+								</div>
+
+								<Separator />
+
+								{/* Quiz Configuration */}
+								<div className="p-5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+									<div className="flex items-center gap-2 mb-4">
+										<HelpCircle className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+										<h3 className="text-base font-semibold text-gray-900 dark:text-white">AI Quiz Configuration</h3>
+									</div>
+									<div>
+										<Label htmlFor="quiz_questions_count" className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+											Number of Quiz Questions *
+										</Label>
+										<div className="flex items-center gap-4 mt-2">
+											<input
+												id="quiz_questions_count"
+												type="range"
+												min={5}
+												max={50}
+												step={5}
+												value={data.quiz_questions_count}
+												onChange={(e) => setData('quiz_questions_count', parseInt(e.target.value))}
+												className="flex-1 accent-purple-600"
+											/>
+											<span className="min-w-[80px] text-center font-bold text-purple-700 dark:text-purple-300 text-lg">
+												{data.quiz_questions_count} Q / {data.quiz_questions_count} min
+											</span>
+										</div>
+										<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+											The quiz timer equals the question count in minutes (e.g. 10 questions = 10 minutes). Range: 5–50.
+										</p>
+										{errors.quiz_questions_count && (
+											<div className="text-red-500 text-sm mt-1 flex items-center gap-1">
+												<AlertCircle className="w-4 h-4" />
+												{errors.quiz_questions_count}
+											</div>
+										)}
 									</div>
 								</div>
 

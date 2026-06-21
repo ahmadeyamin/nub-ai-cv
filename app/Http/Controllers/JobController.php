@@ -33,11 +33,12 @@ class JobController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
-            'salary_range' => 'nullable|string|max:255',
-            'type' => 'required|string|in:Full-time,Part-time,Contract,Freelance,Internship',
+            'title'                => 'required|string|max:255',
+            'description'          => 'required|string',
+            'location'             => 'required|string|max:255',
+            'salary_range'         => 'nullable|string|max:255',
+            'type'                 => 'required|string|in:Full-time,Part-time,Contract,Freelance,Internship',
+            'quiz_questions_count' => 'required|integer|min:5|max:50',
         ]);
 
         $request->user()->jobs()->create($validated);

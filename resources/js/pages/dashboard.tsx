@@ -27,7 +27,10 @@ import {
     Calendar,
     Target,
     BarChart3,
-    Plus
+    Plus,
+    HelpCircle,
+    XCircle,
+    Clock
 } from 'lucide-react';
 import { dashboard } from '@/routes';
 import { create, show } from '@/routes/jobs';
@@ -40,12 +43,42 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
+interface QuizAnswer {
+    selected_option: string | null;
+    is_correct: boolean;
+}
+
+interface QuizQuestion {
+    id: number;
+    question_number: number;
+    question_text: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    option_d: string;
+    correct_option: string;
+    answer: QuizAnswer | null;
+}
+
+interface QuizSession {
+    id: number;
+    token: string;
+    status: 'pending' | 'ready' | 'in_progress' | 'completed' | 'expired';
+    score: number | null;
+    passed: boolean | null;
+    questions_count: number;
+    questions: QuizQuestion[];
+}
+
 interface Application {
     id: number;
     name: string;
     email: string;
     resume_path: string;
     ai_score: number;
+    quiz_status: string;
+    quiz_token: string | null;
+    quiz_session: QuizSession | null;
     ai_analysis: {
         summary: string;
         strengths: string[];
@@ -256,6 +289,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                 <TableHead>Candidate</TableHead>
                                                                 <TableHead>AI Score</TableHead>
                                                                 <TableHead>Match Level</TableHead>
+                                                                <TableHead>Quiz</TableHead>
                                                                 <TableHead>Applied</TableHead>
                                                                 <TableHead className="text-right">Actions</TableHead>
                                                             </TableRow>
@@ -307,11 +341,97 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                 </Badge>
                                                                             )}
                                                                         </TableCell>
+                                                                        <TableCell>
+                                                                            {/* Quiz Status */}
+                                                                            {(() => {
+                                                                                const qs = app.quiz_session;
+                                                                                if (!qs || app.quiz_status === 'pending') {
+                                                                                    return <span className="text-xs text-gray-400 flex items-center gap-1"><Clock className="w-3 h-3" /> Pending</span>;
+                                                                                }
+                                                                                if (qs.status === 'ready') {
+                                                                                    return <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Ready</Badge>;
+                                                                                }
+                                                                                if (qs.status === 'in_progress') {
+                                                                                    return <Badge className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">In Progress</Badge>;
+                                                                                }
+                                                                                if (qs.status === 'completed' || qs.status === 'expired') {
+                                                                                    return (
+                                                                                        <div className="flex flex-col gap-1">
+                                                                                            <span className={`text-sm font-bold ${qs.passed ? 'text-green-600' : 'text-red-600'}`}>
+                                                                                                {qs.score}% {qs.passed ? '✅ Pass' : '❌ Fail'}
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    );
+                                                                                }
+                                                                                return null;
+                                                                            })()}
+                                                                        </TableCell>
                                                                         <TableCell className="text-sm text-gray-600 dark:text-gray-300">
                                                                             {new Date(app.created_at).toLocaleDateString()}
                                                                         </TableCell>
                                                                         <TableCell className="text-right">
                                                                             <div className="flex justify-end gap-2">
+                                                                                {/* Quiz Results Dialog */}
+                                                                                {app.quiz_session && (app.quiz_session.status === 'completed' || app.quiz_session.status === 'expired') && (
+                                                                                    <Dialog>
+                                                                                        <DialogTrigger asChild>
+                                                                                            <Button variant="outline" size="sm" className="border-indigo-200 hover:border-indigo-300 dark:border-indigo-800 dark:hover:border-indigo-700">
+                                                                                                <HelpCircle className="h-4 w-4 mr-2" />
+                                                                                                Quiz Results
+                                                                                            </Button>
+                                                                                        </DialogTrigger>
+                                                                                        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+                                                                                            <DialogHeader>
+                                                                                                <DialogTitle className="flex items-center gap-2">
+                                                                                                    <HelpCircle className="w-5 h-5 text-indigo-600" />
+                                                                                                    Quiz Results — {app.name}
+                                                                                                </DialogTitle>
+                                                                                                <DialogDescription>
+                                                                                                    Score: {app.quiz_session.score}% &nbsp;·&nbsp;
+                                                                                                    {app.quiz_session.passed ? '✅ Passed (≥60%)' : '❌ Failed (<60%)'} &nbsp;·&nbsp;
+                                                                                                    {app.quiz_session.questions.filter(q => q.answer?.is_correct).length}/{app.quiz_session.questions_count} correct
+                                                                                                </DialogDescription>
+                                                                                            </DialogHeader>
+                                                                                            <div className="space-y-3 mt-2">
+                                                                                                {app.quiz_session.questions.map((q) => {
+                                                                                                    const ans = q.answer;
+                                                                                                    const isCorrect = ans?.is_correct;
+                                                                                                    return (
+                                                                                                        <div key={q.id} className={`rounded-lg border p-3 ${isCorrect ? 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20' : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/20'}`}>
+                                                                                                            <div className="flex items-start justify-between gap-2 mb-2">
+                                                                                                                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                                                                                                    <span className="text-xs text-gray-500 mr-2">Q{q.question_number}.</span>
+                                                                                                                    {q.question_text}
+                                                                                                                </p>
+                                                                                                                {isCorrect
+                                                                                                                    ? <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                                                                                                                    : <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />}
+                                                                                                            </div>
+                                                                                                            <div className="grid grid-cols-2 gap-1">
+                                                                                                                {(['a', 'b', 'c', 'd'] as const).map(opt => {
+                                                                                                                    const isCorrectOpt = q.correct_option === opt;
+                                                                                                                    const isSelectedOpt = ans?.selected_option === opt;
+                                                                                                                    return (
+                                                                                                                        <div key={opt} className={`text-xs px-2 py-1 rounded flex items-center gap-1 ${
+                                                                                                                            isCorrectOpt ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-200 font-semibold' :
+                                                                                                                            isSelectedOpt && !isCorrectOpt ? 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200' :
+                                                                                                                            'text-gray-600 dark:text-gray-400'
+                                                                                                                        }`}>
+                                                                                                                            <span className="font-bold uppercase">{opt}.</span>
+                                                                                                                            <span className="truncate">{q[`option_${opt}` as keyof QuizQuestion] as string}</span>
+                                                                                                                            {isCorrectOpt && <CheckCircle className="w-3 h-3 ml-auto flex-shrink-0" />}
+                                                                                                                            {isSelectedOpt && !isCorrectOpt && <XCircle className="w-3 h-3 ml-auto flex-shrink-0" />}
+                                                                                                                        </div>
+                                                                                                                    );
+                                                                                                                })}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    );
+                                                                                                })}
+                                                                                            </div>
+                                                                                        </DialogContent>
+                                                                                    </Dialog>
+                                                                                )}
                                                                                 {app.ai_analysis && (
                                                                                     <Dialog>
                                                                                         <DialogTrigger asChild>
@@ -331,33 +451,18 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                                 </DialogDescription>
                                                                                             </DialogHeader>
                                                                                             <div className="space-y-6">
-                                                                                                {/* Score Overview */}
                                                                                                 <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
                                                                                                     <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
                                                                                                         {app.ai_score}/100
                                                                                                     </div>
-                                                                                                    <div className="text-sm text-gray-600 dark:text-gray-300">
-                                                                                                        Overall Match Score
-                                                                                                    </div>
+                                                                                                    <div className="text-sm text-gray-600 dark:text-gray-300">Overall Match Score</div>
                                                                                                 </div>
-
-                                                                                                {/* Summary */}
                                                                                                 <div>
-                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2">
-                                                                                                        <FileText className="w-4 h-4" />
-                                                                                                        Summary
-                                                                                                    </h4>
-                                                                                                    <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                                                                                                        {app.ai_analysis.summary}
-                                                                                                    </p>
+                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2"><FileText className="w-4 h-4" />Summary</h4>
+                                                                                                    <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">{app.ai_analysis.summary}</p>
                                                                                                 </div>
-
-                                                                                                {/* Strengths */}
                                                                                                 <div>
-                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2 text-green-600">
-                                                                                                        <CheckCircle className="w-4 h-4" />
-                                                                                                        Strengths
-                                                                                                    </h4>
+                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2 text-green-600"><CheckCircle className="w-4 h-4" />Strengths</h4>
                                                                                                     <ul className="space-y-2">
                                                                                                         {app.ai_analysis.strengths.map((strength, index) => (
                                                                                                             <li key={index} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
@@ -367,13 +472,8 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                                         ))}
                                                                                                     </ul>
                                                                                                 </div>
-
-                                                                                                {/* Weaknesses */}
                                                                                                 <div>
-                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2 text-red-600">
-                                                                                                        <AlertCircle className="w-4 h-4" />
-                                                                                                        Areas for Improvement
-                                                                                                    </h4>
+                                                                                                    <h4 className="font-semibold mb-3 flex items-center gap-2 text-red-600"><AlertCircle className="w-4 h-4" />Areas for Improvement</h4>
                                                                                                     <ul className="space-y-2">
                                                                                                         {app.ai_analysis.weaknesses.map((weakness, index) => (
                                                                                                             <li key={index} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
