@@ -47,13 +47,13 @@ export default function CreateJob() {
 
 	return (
 		<AppLayout breadcrumbs={[{ title: 'Post a Job', href: create().url }]}>
-			<Head title="Post a Job - AI Career Hub" />
+			<Head title="Post a Job - Career Hub" />
 
-			<div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+			<div className="bg-gradient-to-br from-slate-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
 				<div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
 					{/* Header */}
 					<div className="text-center mb-8">
-						<div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 text-sm font-medium mb-4">
+						<div className="inline-flex items-center px-3 py-1 rounded-full bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 text-sm font-medium mb-4">
 							<Brain className="w-4 h-4 mr-2" />
 							AI-Powered Job Posting
 						</div>
@@ -67,10 +67,10 @@ export default function CreateJob() {
 					</div>
 
 					{/* AI Benefits Card */}
-					<Card className="border-0 shadow-lg bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 mb-8">
+					<Card className="border-0 shadow-lg bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 mb-8">
 						<CardContent className="p-6">
 							<div className="flex items-center gap-4">
-								<div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+								<div className="w-12 h-12 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg flex items-center justify-center">
 									<Brain className="w-6 h-6 text-white" />
 								</div>
 								<div className="flex-1">
@@ -141,10 +141,10 @@ export default function CreateJob() {
 												{errors.description}
 											</div>
 										)}
-										<div className="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+										<div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
 											<div className="flex items-start gap-2">
-												<Lightbulb className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5" />
-												<p className="text-sm text-blue-700 dark:text-blue-300">
+												<Lightbulb className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+												<p className="text-sm text-emerald-700 dark:text-emerald-300">
 													<strong>AI Tip:</strong> Include specific skills, experience levels, and qualifications. 
 													The more detailed your description, the better our AI can match candidates.
 												</p>
@@ -235,9 +235,9 @@ export default function CreateJob() {
 								<Separator />
 
 								{/* Quiz Configuration */}
-								<div className="p-5 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+								<div className="p-5 rounded-xl border border-teal-200 dark:border-teal-800 bg-teal-50 dark:bg-teal-950/30">
 									<div className="flex items-center gap-2 mb-4">
-										<HelpCircle className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+										<HelpCircle className="w-5 h-5 text-teal-600 dark:text-teal-400" />
 										<h3 className="text-base font-semibold text-gray-900 dark:text-white">AI Quiz Configuration</h3>
 									</div>
 									<div>
@@ -253,9 +253,9 @@ export default function CreateJob() {
 												step={5}
 												value={data.quiz_questions_count}
 												onChange={(e) => setData('quiz_questions_count', parseInt(e.target.value))}
-												className="flex-1 accent-purple-600"
+												className="flex-1 accent-teal-600"
 											/>
-											<span className="min-w-[80px] text-center font-bold text-purple-700 dark:text-purple-300 text-lg">
+											<span className="min-w-[80px] text-center font-bold text-teal-700 dark:text-teal-300 text-lg">
 												{data.quiz_questions_count} Q / {data.quiz_questions_count} min
 											</span>
 										</div>
@@ -275,7 +275,7 @@ export default function CreateJob() {
 								<Card className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
 									<CardHeader className="pb-4">
 										<CardTitle className="text-lg flex items-center gap-2">
-											<Target className="w-5 h-5 text-purple-600" />
+											<Target className="w-5 h-5 text-teal-600" />
 											What Happens Next?
 										</CardTitle>
 									</CardHeader>
@@ -308,7 +308,7 @@ export default function CreateJob() {
 								<div className="flex flex-col sm:flex-row gap-4 pt-4">
 									<Button 
 										type="submit" 
-										className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 text-base"
+										className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium py-3 text-base"
 										disabled={processing}
 									>
 										{processing ? (

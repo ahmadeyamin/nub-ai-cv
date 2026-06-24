@@ -62,7 +62,7 @@ export default function SearchJobs({ onFiltersChange, initialFilters = {} }: Sea
                     placeholder="Search for jobs, companies, or keywords..."
                     value={filters.query}
                     onChange={(e) => updateFilter('query', e.target.value)}
-                    className="pl-12 pr-4 py-4 text-lg rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600"
+                    className="pl-12 pr-4 py-4 text-lg rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 dark:bg-gray-800 dark:border-gray-600"
                 />
                 <Button
                     variant="ghost"
@@ -93,12 +93,12 @@ export default function SearchJobs({ onFiltersChange, initialFilters = {} }: Sea
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Job Type
                             </label>
-                            <Select value={filters.jobType} onValueChange={(value) => updateFilter('jobType', value)}>
+                            <Select value={filters.jobType || 'all'} onValueChange={(value) => updateFilter('jobType', value === 'all' ? '' : value)}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select job type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">All Types</SelectItem>
+                                    <SelectItem value="all">All Types</SelectItem>
                                     <SelectItem value="Full-time">Full-time</SelectItem>
                                     <SelectItem value="Part-time">Part-time</SelectItem>
                                     <SelectItem value="Contract">Contract</SelectItem>
@@ -112,12 +112,12 @@ export default function SearchJobs({ onFiltersChange, initialFilters = {} }: Sea
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Salary Range
                             </label>
-                            <Select value={filters.salaryRange} onValueChange={(value) => updateFilter('salaryRange', value)}>
+                            <Select value={filters.salaryRange || 'all'} onValueChange={(value) => updateFilter('salaryRange', value === 'all' ? '' : value)}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select salary range" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="">All Salaries</SelectItem>
+                                    <SelectItem value="all">All Salaries</SelectItem>
                                     <SelectItem value="0-30k">$0 - $30k</SelectItem>
                                     <SelectItem value="30k-50k">$30k - $50k</SelectItem>
                                     <SelectItem value="50k-70k">$50k - $70k</SelectItem>

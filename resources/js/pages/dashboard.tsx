@@ -111,9 +111,9 @@ export default function Dashboard({ jobs }: DashboardProps) {
 
     return (
         <AppLayout breadcrumbs={[{ title: 'Dashboard', href: dashboard().url }]}>
-            <Head title="Employer Dashboard - AI Career Hub" />
+            <Head title="Employer Dashboard - Career Hub" />
 
-            <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+            <div className="bg-gradient-to-br from-slate-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -126,7 +126,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                             </p>
                         </div>
                         <Link href={create()}>
-                            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                            <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">
                                 <Plus className="w-4 h-4 mr-2" />
                                 Post New Job
                             </Button>
@@ -142,8 +142,8 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Jobs</p>
                                         <p className="text-2xl font-bold text-gray-900 dark:text-white">{jobs.length}</p>
                                     </div>
-                                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                                        <Briefcase className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                    <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                                        <Briefcase className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                                     </div>
                                 </div>
                             </CardContent>
@@ -156,8 +156,8 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Applications</p>
                                         <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalApplications}</p>
                                     </div>
-                                    <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                                        <Users className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                                    <div className="w-8 h-8 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center">
+                                        <Users className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                                     </div>
                                 </div>
                             </CardContent>
@@ -193,10 +193,10 @@ export default function Dashboard({ jobs }: DashboardProps) {
                     </div>
 
                     {/* AI Insights Banner */}
-                    <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 mb-8">
+                    <Card className="border-0 shadow-lg bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 mb-8">
                         <CardContent className="p-6">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                                <div className="w-12 h-12 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg flex items-center justify-center">
                                     <Brain className="w-6 h-6 text-white" />
                                 </div>
                                 <div className="flex-1">
@@ -207,7 +207,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                         Our AI analyzes each resume against your job requirements, providing match scores and detailed insights to help you make better hiring decisions.
                                     </p>
                                 </div>
-                                <BarChart3 className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+                                <BarChart3 className="w-8 h-8 text-teal-600 dark:text-teal-400" />
                             </div>
                         </CardContent>
                     </Card>
@@ -230,7 +230,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                             {job.title}
                                                         </h3>
                                                     </Link>
-                                                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                                                    <Badge className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
                                                         {job.applications.length} Applications
                                                     </Badge>
                                                 </div>
@@ -349,7 +349,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                     return <span className="text-xs text-gray-400 flex items-center gap-1"><Clock className="w-3 h-3" /> Pending</span>;
                                                                                 }
                                                                                 if (qs.status === 'ready') {
-                                                                                    return <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">Ready</Badge>;
+                                                                                    return <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">Ready</Badge>;
                                                                                 }
                                                                                 if (qs.status === 'in_progress') {
                                                                                     return <Badge className="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">In Progress</Badge>;
@@ -375,7 +375,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                 {app.quiz_session && (app.quiz_session.status === 'completed' || app.quiz_session.status === 'expired') && (
                                                                                     <Dialog>
                                                                                         <DialogTrigger asChild>
-                                                                                            <Button variant="outline" size="sm" className="border-indigo-200 hover:border-indigo-300 dark:border-indigo-800 dark:hover:border-indigo-700">
+                                                                                            <Button variant="outline" size="sm" className="border-emerald-200 hover:border-emerald-300 dark:border-emerald-800 dark:hover:border-emerald-700">
                                                                                                 <HelpCircle className="h-4 w-4 mr-2" />
                                                                                                 Quiz Results
                                                                                             </Button>
@@ -383,7 +383,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                         <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
                                                                                             <DialogHeader>
                                                                                                 <DialogTitle className="flex items-center gap-2">
-                                                                                                    <HelpCircle className="w-5 h-5 text-indigo-600" />
+                                                                                                    <HelpCircle className="w-5 h-5 text-emerald-600" />
                                                                                                     Quiz Results — {app.name}
                                                                                                 </DialogTitle>
                                                                                                 <DialogDescription>
@@ -435,7 +435,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                 {app.ai_analysis && (
                                                                                     <Dialog>
                                                                                         <DialogTrigger asChild>
-                                                                                            <Button variant="outline" size="sm" className="border-purple-200 hover:border-purple-300 dark:border-purple-800 dark:hover:border-purple-700">
+                                                                                            <Button variant="outline" size="sm" className="border-teal-200 hover:border-teal-300 dark:border-teal-800 dark:hover:border-teal-700">
                                                                                                 <Brain className="h-4 w-4 mr-2" />
                                                                                                 AI Analysis
                                                                                             </Button>
@@ -443,7 +443,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                                                                                             <DialogHeader>
                                                                                                 <DialogTitle className="flex items-center gap-2">
-                                                                                                    <Brain className="w-5 h-5 text-purple-600" />
+                                                                                                    <Brain className="w-5 h-5 text-teal-600" />
                                                                                                     AI Analysis for {app.name}
                                                                                                 </DialogTitle>
                                                                                                 <DialogDescription>
@@ -451,8 +451,8 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                                                                                 </DialogDescription>
                                                                                             </DialogHeader>
                                                                                             <div className="space-y-6">
-                                                                                                <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
-                                                                                                    <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                                                                                                <div className="text-center p-4 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-lg">
+                                                                                                    <div className="text-3xl font-bold text-teal-600 dark:text-teal-400 mb-2">
                                                                                                         {app.ai_score}/100
                                                                                                     </div>
                                                                                                     <div className="text-sm text-gray-600 dark:text-gray-300">Overall Match Score</div>
@@ -541,7 +541,7 @@ export default function Dashboard({ jobs }: DashboardProps) {
                                         Start by posting your first job opening to begin receiving AI-powered candidate analysis and make better hiring decisions.
                                     </p>
                                     <Link href={create()}>
-                                        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8">
+                                        <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 px-8">
                                             <Plus className="w-5 h-5 mr-2" />
                                             Post Your First Job
                                         </Button>

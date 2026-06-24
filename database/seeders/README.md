@@ -1,6 +1,6 @@
 # Database Seeders
 
-This directory contains database seeders for populating your AI Career Hub application with realistic data.
+This directory contains database seeders for populating your Career Hub application with realistic data.
 
 ## Available Seeders
 

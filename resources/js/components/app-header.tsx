@@ -32,15 +32,21 @@ import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { dashboard, login, register } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, LogIn, UserPlus } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, Search, LogIn, UserPlus, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
+import { index as candidatesIndex } from '@/routes/candidates';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Candidates',
+        href: candidatesIndex(),
+        icon: Users,
     },
 ];
 
@@ -257,7 +263,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </Button>
                             </Link>
                             <Link href={register().url}>
-                                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2">
+                                <Button size="sm" className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 flex items-center gap-2">
                                     <UserPlus className="w-4 h-4" />
                                     Sign Up
                                 </Button>

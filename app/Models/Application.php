@@ -14,6 +14,7 @@ class Application extends Model
     protected $fillable = [
         'job_post_id',
         'user_id',
+        'candidate_id',
         'name',
         'email',
         'resume_path',
@@ -36,6 +37,11 @@ class Application extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function candidate(): BelongsTo
+    {
+        return $this->belongsTo(Candidate::class);
     }
 
     public function quizSession(): HasOne

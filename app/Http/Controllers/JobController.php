@@ -19,7 +19,9 @@ class JobController extends Controller
 
     public function show(Job $job)
     {
-        $job->load('user');
+        $job->load(['user', 'applications' => function($query) {
+            $query->orderBy('ai_score', 'desc');
+        }]);
         return Inertia::render('Job/Show', [
             'job' => $job
         ]);

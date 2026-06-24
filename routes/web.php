@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\QuizController;
@@ -28,5 +29,16 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
     Route::resource('jobs', JobController::class)->only(['create', 'store', 'update', 'destroy']);
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 });
+
+// Candidates routes (publicly accessible)
+Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates.index');
+Route::get('/candidates/{candidate}/download', [CandidateController::class, 'downloadResume'])->name('candidates.download');
+
+// Static Pages
+Route::get('/about', fn () => Inertia::render('Company/About'))->name('about');
+Route::get('/contact', fn () => Inertia::render('Company/Contact'))->name('contact');
+Route::get('/faq', fn () => Inertia::render('Resources/FAQ'))->name('faq');
+Route::get('/privacy', fn () => Inertia::render('Legal/Privacy'))->name('privacy');
+Route::get('/terms', fn () => Inertia::render('Legal/Terms'))->name('terms');
 
 require __DIR__ . '/settings.php';
