@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Prism;
@@ -84,5 +85,109 @@ class CVAnalysisService
 			->asStructured();
 
 		return (array) ($response->structured ?? []);
+	}
+
+	/**
+	 * Score each job in $jobs against the candidate profile.
+	 * Processes jobs in batches to avoid token limits.
+	 * Returns the original jobs array with 'match_score' and 'match_reason' keys added.
+	 */
+	public function matchJobs(array $cvProfile, array $jobs): array
+	{
+		if (empty($jobs)) {
+			return [];
+		}
+
+		$batchSize  = 8;
+		$batches    = array_chunk($jobs, $batchSize, true);
+		$allResults = [];
+
+		// Build a concise CV summary for the prompt
+		$skillsStr     = implode(', ', array_slice($cvProfile['skills'] ?? [], 0, 20));
+		$experienceStr = implode('; ', array_slice($cvProfile['experience'] ?? [], 0, 5));
+		$educationStr  = implode('; ', array_slice($cvProfile['education'] ?? [], 0, 3));
+		$summary       = $cvProfile['summary'] ?? '';
+
+		$cvSummary = "Candidate Summary: {$summary}\n"
+			. "Skills: {$skillsStr}\n"
+			. "Experience: {$experienceStr}\n"
+			. "Education: {$educationStr}";
+
+		foreach ($batches as $batch) {
+			// Build the job list payload for this batch
+			$jobListText = '';
+			$batchKeys   = [];
+			foreach ($batch as $key => $job) {
+				$batchKeys[] = $key;
+				$index       = count($batchKeys);
+				$jobListText .= "Job #{$index} (id:{$job['id']})\n"
+					. "Title: {$job['title']}\n"
+					. "Description: " . substr($job['description'], 0, 400) . "\n\n";
+			}
+
+			try {
+				$response = Prism::structured()
+					->using(Provider::OpenRouter, 'gemini-2.5-flash')
+					->withSystemPrompt(
+						'You are an expert recruiter. Score how well a candidate matches each job description from 0 to 100. '
+						. 'Be honest and objective. Return exactly one result per job in the same order provided.'
+					)
+					->withPrompt(
+						"Candidate Profile:\n{$cvSummary}\n\nJobs to score:\n{$jobListText}"
+					)
+					->withClientOptions(['temperature' => 0])
+					->withSchema(new ObjectSchema(
+						name: 'job_matches',
+						description: 'Match scores for each job',
+						properties: [
+							new ArraySchema(
+								'matches',
+								'List of job match results',
+								new ObjectSchema(
+									name: 'match',
+									description: 'Match result for one job',
+									properties: [
+										new NumberSchema('job_id', 'The job id as provided'),
+										new NumberSchema('match_score', 'Score from 0 to 100'),
+										new StringSchema('match_reason', 'One sentence explaining the score'),
+									],
+									requiredFields: ['job_id', 'match_score', 'match_reason']
+								)
+							),
+						],
+						requiredFields: ['matches']
+					))
+					->asStructured();
+
+				$structured = (array) ($response->structured ?? []);
+				$matchMap   = [];
+
+				foreach ($structured['matches'] ?? [] as $m) {
+					$matchMap[(int) $m['job_id']] = $m;
+				}
+
+				foreach ($batch as $key => $job) {
+					$m = $matchMap[$job['id']] ?? null;
+					$allResults[] = array_merge($job, [
+						'match_score'  => $m ? (int) $m['match_score'] : 0,
+						'match_reason' => $m['match_reason'] ?? 'No match data available.',
+					]);
+				}
+			} catch (\Throwable $e) {
+				Log::error('CVAnalysisService::matchJobs batch failed', ['error' => $e->getMessage()]);
+				// On failure, append jobs with score 0 so UI still works
+				foreach ($batch as $job) {
+					$allResults[] = array_merge($job, [
+						'match_score'  => 0,
+						'match_reason' => 'Matching unavailable for this job.',
+					]);
+				}
+			}
+		}
+
+		// Sort by match_score descending
+		usort($allResults, fn ($a, $b) => $b['match_score'] <=> $a['match_score']);
+
+		return $allResults;
 	}
 }

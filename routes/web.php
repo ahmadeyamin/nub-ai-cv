@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\CvMatchingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\QuizController;
@@ -13,6 +14,12 @@ Route::get('/', [JobController::class, 'index'])->name('home');
 
 Route::get('jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
 Route::post('jobs/{job}/applications', [ApplicationController::class, 'store'])->name('applications.store');
+
+// ── CV Matching (public — no auth required) ───────────────────────────────────
+Route::get('/cv-matching',          [CvMatchingController::class, 'index'])->name('cv-matching.index');
+Route::post('/cv-matching/upload',  [CvMatchingController::class, 'upload'])->name('cv-matching.upload');
+Route::get('/cv-matching/match',    [CvMatchingController::class, 'match'])->name('cv-matching.match');
+Route::delete('/cv-matching/clear', [CvMatchingController::class, 'clear'])->name('cv-matching.clear');
 
 // ── Quiz routes (public — token-based, no auth required) ──────────────────────
 Route::prefix('quiz/{token}')->name('quiz.')->group(function () {

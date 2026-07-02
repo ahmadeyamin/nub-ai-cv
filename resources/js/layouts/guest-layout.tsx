@@ -1,7 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { type ReactNode } from 'react';
 import { type SharedData } from '@/types';
-import { Brain, LogIn, UserPlus, Users, Briefcase, LayoutGrid } from 'lucide-react';
+import { Brain, LogIn, UserPlus, Users, Briefcase, LayoutGrid, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -54,6 +54,19 @@ export default function GuestLayout({ children }: GuestLayoutProps) {
                                 <span className="flex items-center gap-1.5">
                                     <Briefcase className="w-4 h-4" />
                                     Jobs
+                                </span>
+                            </Link>
+                            <Link 
+                                href="/cv-matching" 
+                                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                    page.url.startsWith('/cv-matching') 
+                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 font-semibold' 
+                                        : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                                }`}
+                            >
+                                <span className="flex items-center gap-1.5">
+                                    <Sparkles className="w-4 h-4" />
+                                    Match Jobs
                                 </span>
                             </Link>
                             <Link 

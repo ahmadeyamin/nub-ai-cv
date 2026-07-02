@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,10 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { MapPin, DollarSign, Clock, Building, Brain, Upload, FileText, CheckCircle, AlertCircle, TrendingUp, Star, Users } from 'lucide-react';
+import { MapPin, DollarSign, Clock, Building, Brain, Upload, FileText, CheckCircle, AlertCircle, TrendingUp, Star, Users, X } from 'lucide-react';
 import { store } from '@/routes/applications';
 import { home, login } from '@/routes';
 import GuestLayout from '@/layouts/guest-layout';
+import { useCvCache } from '@/hooks/use-cv-cache';
 
 interface Application {
 	id: number;
@@ -45,6 +47,8 @@ export default function ShowJob({ job }: ShowJobProps) {
 		cover_note: '',
 	});
 
+	const { profile: cachedCv, hasCache, clearCache } = useCvCache();
+
 	const [isDragging, setIsDragging] = useState(false);
 
 	const handleDragOver = (e: React.DragEvent) => {
@@ -70,6 +74,12 @@ export default function ShowJob({ job }: ShowJobProps) {
 		post(store(job.id).url, {
 			onSuccess: () => reset(),
 		});
+	};
+
+	const handleClearCachedCv = async () => {
+		clearCache();
+		// Also clear the server-side session cache
+		await axios.delete('/cv-matching/clear').catch(() => {});
 	};
 
 	const isOwner = auth.user && auth.user.id === job.user_id;
@@ -202,55 +212,81 @@ export default function ShowJob({ job }: ShowJobProps) {
 												<FileText className="w-4 h-4" />
 												Resume (PDF)
 											</Label>
-											<div 
-												className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center min-h-[160px] ${
-													isDragging 
-														? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 scale-[1.02]' 
-														: 'border-slate-300 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-												}`}
-												onDragOver={handleDragOver}
-												onDragLeave={handleDragLeave}
-												onDrop={handleDrop}
-												onClick={() => document.getElementById('resume')?.click()}
-											>
-												<Input
-													id="resume"
-													type="file"
-													accept=".pdf"
-													onChange={(e) => setData('resume', e.target.files ? e.target.files[0] : null)}
-													className="hidden"
-												/>
-												
-												{data.resume ? (
-													<div className="flex flex-col items-center justify-center space-y-3 animate-in fade-in zoom-in duration-300">
-														<div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-															<FileText className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-														</div>
-														<div>
-															<div className="text-sm font-semibold text-gray-900 dark:text-white max-w-[200px] truncate">
-																{data.resume.name}
+
+											{/* If CV is cached, show banner instead of dropzone */}
+											{hasCache && cachedCv ? (
+												<div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4">
+													<div className="flex items-start justify-between gap-3">
+														<div className="flex items-center gap-3">
+															<div className="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
+																<CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
 															</div>
-															<div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-																{(data.resume.size / 1024 / 1024).toFixed(2)} MB • Click to replace
+															<div>
+																<p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Using your saved CV</p>
+																<p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">{cachedCv.name}</p>
 															</div>
 														</div>
+														<button
+															type="button"
+															onClick={handleClearCachedCv}
+															className="text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+															title="Use a different CV"
+														>
+															<X className="w-4 h-4" />
+														</button>
 													</div>
-												) : (
-													<div className="flex flex-col items-center justify-center space-y-3">
-														<div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-															<Upload className="w-6 h-6 text-slate-500 dark:text-slate-400" />
-														</div>
-														<div>
-															<div className="text-sm font-medium text-gray-900 dark:text-white">
-																<span className="text-emerald-600 dark:text-emerald-400">Click to upload</span> or drag and drop
+												</div>
+											) : (
+												<div 
+													className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center min-h-[160px] ${
+														isDragging 
+															? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 scale-[1.02]' 
+															: 'border-slate-300 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+													}`}
+													onDragOver={handleDragOver}
+													onDragLeave={handleDragLeave}
+													onDrop={handleDrop}
+													onClick={() => document.getElementById('resume')?.click()}
+												>
+													<Input
+														id="resume"
+														type="file"
+														accept=".pdf"
+														onChange={(e) => setData('resume', e.target.files ? e.target.files[0] : null)}
+														className="hidden"
+													/>
+													
+													{data.resume ? (
+														<div className="flex flex-col items-center justify-center space-y-3 animate-in fade-in zoom-in duration-300">
+															<div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+																<FileText className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
 															</div>
-															<div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-																PDF only (Max. 10MB)
+															<div>
+																<div className="text-sm font-semibold text-gray-900 dark:text-white max-w-[200px] truncate">
+																	{data.resume.name}
+																</div>
+																<div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+																	{(data.resume.size / 1024 / 1024).toFixed(2)} MB • Click to replace
+																</div>
 															</div>
 														</div>
-													</div>
-												)}
-											</div>
+													) : (
+														<div className="flex flex-col items-center justify-center space-y-3">
+															<div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+																<Upload className="w-6 h-6 text-slate-500 dark:text-slate-400" />
+															</div>
+															<div>
+																<div className="text-sm font-medium text-gray-900 dark:text-white">
+																	<span className="text-emerald-600 dark:text-emerald-400">Click to upload</span> or drag and drop
+																</div>
+																<div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+																	PDF only (Max. 10MB)
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
+											)}
 											{errors.resume && (
 												<div className="text-red-500 text-sm mt-1 flex items-center gap-1">
 													<AlertCircle className="w-4 h-4" />
