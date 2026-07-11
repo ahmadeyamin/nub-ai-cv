@@ -12,20 +12,26 @@ class CandidateController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Candidate::query()->with(['applications.job', 'applications.quizSession']);
+        $query = Candidate::query()->with(['applications.job']);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhere('skills', 'like', "%{$search}%")
                   ->orWhere('summary', 'like', "%{$search}%");
             });
         }
 
-        $candidates = $query->latest()->get();
+        $candidates = $query
+            ->latest()
+            ->get()
+            ->map(function ($candidate) {
+                $candidate->name = $candidate->masked_name;
+                $candidate->email = $candidate->masked_email;
+                $candidate->phone = $candidate->masked_phone;
+                return $candidate;
+            });
 
         return Inertia::render('Candidates/Index', [
             'candidates' => $candidates,

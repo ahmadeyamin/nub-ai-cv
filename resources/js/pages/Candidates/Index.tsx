@@ -142,7 +142,7 @@ export default function CandidatesIndex() {
                                 <div className="relative flex-1">
                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                     <Input
-                                        placeholder="Search by name, email, phone, or specific skills (e.g. React, PHP)..."
+                                        placeholder="Search by name, or specific skills (e.g. React, PHP)..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="pl-10 h-11 border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-900/50"
@@ -265,10 +265,10 @@ export default function CandidatesIndex() {
                                                             onClick={() => openCandidateDetails(candidate)}
                                                             className="hover:bg-slate-100 dark:hover:bg-slate-800"
                                                         >
-                                                            <Eye className="w-4 h-4 mr-1.5" />
+                                                            <Eye className="w-4 h-4" />
                                                             View Profile
                                                         </Button>
-                                                        {candidate.resume_path && (
+                                                        {/* {candidate.resume_path && (
                                                             <a
                                                                 href={candidatesDownload({ candidate: candidate.id }).url}
                                                                 target="_blank"
@@ -282,7 +282,7 @@ export default function CandidatesIndex() {
                                                                     <Download className="w-4 h-4" />
                                                                 </Button>
                                                             </a>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -332,7 +332,7 @@ export default function CandidatesIndex() {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2 mt-6">
+                                {/* <div className="flex gap-2 mt-6">
                                     {selectedCandidate.resume_path && (
                                         <a
                                             href={candidatesDownload({ candidate: selectedCandidate.id }).url}
@@ -346,7 +346,7 @@ export default function CandidatesIndex() {
                                             </Button>
                                         </a>
                                     )}
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Sheet Content Body */}
